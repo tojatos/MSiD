@@ -6,7 +6,7 @@ namespace SortingMethods
     {
         static void Main(string[] args)
         {
-            int[] numbersToSort1 = { 1, 6, -6, 3, 5, 21 };
+            float[] numbersToSort1 = { 1.6f, 6.5f, 1.5f, 1.55f, 1.51f, -6, 3, 5, 21 };
             int[] numbersToSort2 = { 1021, 6, 5, 5, 0, 0, 3};
 
             ISortingAlgorithm quicksort = new Quicksort();

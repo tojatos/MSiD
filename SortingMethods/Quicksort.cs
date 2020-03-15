@@ -1,15 +1,17 @@
+using System;
+
 namespace SortingMethods
 {
     public class Quicksort : ISortingAlgorithm
     {
         public string Name => "Quicksort";
 
-        public void Sort(ref int[] numbers)
+        public void Sort<T>(ref T[] numbers) where T : IComparable
         {
             Sort(ref numbers, 0, numbers.Length - 1);
         }
 
-        private static void Sort(ref int[] numbers, int low, int high)
+        private static void Sort<T>(ref T[] numbers, int low, int high) where T : IComparable
         {
             if (low >= high) return;
             int p = Partition(ref numbers, low, high);
@@ -17,9 +19,9 @@ namespace SortingMethods
             Sort(ref numbers, p + 1, high);
         }
 
-        private static int Partition(ref int[] numbers, int low, int high)
+        private static int Partition<T>(ref T[] numbers, int low, int high) where T : IComparable
         {
-            int pivot = numbers[(low + high) / 2];
+            T pivot = numbers[(low + high) / 2];
             int i = low - 1;
             int j = high + 1;
             while (true)
@@ -27,11 +29,11 @@ namespace SortingMethods
                 do
                 {
                     ++i;
-                } while (numbers[i] < pivot);
+                } while (numbers[i].CompareTo(pivot) == -1);
                 do
                 {
                     --j;
-                } while (numbers[j] > pivot);
+                } while (numbers[j].CompareTo(pivot) == 1);
 
                 if (i >= j) return j;
 
@@ -40,9 +42,9 @@ namespace SortingMethods
 
         }
 
-        private static void Swap(ref int[] numbers, int i, int j)
+        private static void Swap<T>(ref T[] numbers, int i, int j)
         {
-            int tmp = numbers[i];
+            T tmp = numbers[i];
             numbers[i] = numbers[j];
             numbers[j] = tmp;
         }
