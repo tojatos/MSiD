@@ -71,11 +71,40 @@ def get_buy_sell(api, market):
     data = get_json_data(url)
     return extract_buy_sell(api, data)
 
-for api in apis:
-    print(api)
-    print('-=-=-=-=-=-=-=-=-=-=-')
-    for i, market in enumerate(market_mappings[api]):
-        print(f'{market_names[i]}: {get_buy_sell(api, market)}')
-    print('-=-=-=-=-=-=-=-=-=-=-')
-    print()
+def gather_data():
+    data = {}
+    for i, market in enumerate(market_names):
+        data[market] = {api: get_buy_sell(api, market_mappings[api][i]) for api in apis}
+    return data
 
+def print_best_arbitrage(data, market):
+    d = data[market]
+
+    max_buy_market = max(d, key=lambda x: d[x][0])
+    min_sell_market = min(d, key=lambda x: d[x][1])
+
+    if max_buy_market == min_sell_market:
+        return
+
+    max_buy = d[max_buy_market][0]
+    min_sell = d[min_sell_market][1]
+
+    if max_buy > min_sell:
+        print(f'Arbitrage possible on {market}:')
+        print(f'buy on {min_sell_market} for {min_sell} $')
+        print(f'sell on {max_buy_market} for {max_buy} $')
+        print(f'to gain {round(max_buy - min_sell, 2)} $')
+        print()
+
+def print_best_arbitrages():
+    data = gather_data()
+    for market in market_names:
+        print_best_arbitrage(data, market)
+
+def monitor_best_arbitrages():
+    while True:
+        print_best_arbitrages()
+        sleep(5)
+
+if __name__ == "__main__":
+    monitor_best_arbitrages()
