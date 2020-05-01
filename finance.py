@@ -3,6 +3,8 @@
 import urllib.request, json
 from time import sleep
 
+budget = 1000 # dollars
+
 market_names = [
     'BTC',
     'LTC',
@@ -90,7 +92,8 @@ def apply_fees(data):
         for market in market_names:
             data[market][api] = (data[market][api][0] * (1 - fee),  data[market][api][1] * (1 + fee))
 
-def print_best_arbitrage(data, market):
+def calculate_best_arbitrage(data, market):
+    global budget
     d = data[market]
 
     max_buy_market = max(d, key=lambda x: d[x][0])
@@ -109,15 +112,21 @@ def print_best_arbitrage(data, market):
         print(f'to gain {round(max_buy - min_sell, 2)} $')
         print()
 
-def print_best_arbitrages():
+        old_budget = budget
+        budget += (budget / max_buy) * (max_buy - min_sell)
+
+        print(f'My budget: {round(old_budget, 2)}$ -> {round(budget, 2)}$')
+        print()
+
+def calculate_best_arbitrages():
     data = gather_data()
     apply_fees(data)
     for market in market_names:
-        print_best_arbitrage(data, market)
+        calculate_best_arbitrage(data, market)
 
 def monitor_best_arbitrages():
     while True:
-        print_best_arbitrages()
+        calculate_best_arbitrages()
         sleep(5)
 
 if __name__ == "__main__":
