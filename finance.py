@@ -17,6 +17,13 @@ apis = [
     'binance',
 ]
 
+fee_mappings = {
+    'bittrex': 0.0020,
+    'bitbay': 0.0010,
+    'kraken': 0.0026,
+    'binance': 0.0010,
+}
+
 market_mappings = {
     'bittrex': [
         'USD-BTC',
@@ -77,6 +84,12 @@ def gather_data():
         data[market] = {api: get_buy_sell(api, market_mappings[api][i]) for api in apis}
     return data
 
+def apply_fees(data):
+    for api in apis:
+        fee = fee_mappings[api]
+        for market in market_names:
+            data[market][api] = (data[market][api][0] * (1 - fee),  data[market][api][1] * (1 + fee))
+
 def print_best_arbitrage(data, market):
     d = data[market]
 
@@ -98,6 +111,7 @@ def print_best_arbitrage(data, market):
 
 def print_best_arbitrages():
     data = gather_data()
+    apply_fees(data)
     for market in market_names:
         print_best_arbitrage(data, market)
 
