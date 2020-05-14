@@ -1,4 +1,5 @@
 WALLET_TABLE = 'Wallet'
+TICKER_TABLE = 'Tickers'
 
 import sqlite3
 from time import gmtime, strftime
@@ -24,4 +25,8 @@ def update_in_wallet(currency, value):
 
 def delete_wallet():
     c.execute(f'DELETE FROM {WALLET_TABLE}')
+    conn.commit()
+
+def insert_market_data(buy, sell, market):
+    c.execute(f'INSERT INTO {TICKER_TABLE} (buy, sell, market) VALUES (?, ?, ?)', (buy, sell, market))
     conn.commit()

@@ -1,3 +1,3 @@
 #!/bin/bash
 unset DEBUG
-sudo app/app.py
+python -m app.start_app
