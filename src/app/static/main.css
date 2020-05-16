@@ -39,3 +39,9 @@ body {
   width: 100%;
   font-size: 1.2em;
 }
+
+.line {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
