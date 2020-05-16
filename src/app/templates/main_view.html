@@ -1,0 +1,11 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="wallet">
+  {% for (currency, value) in wallet %}
+  <div class="group">
+    <div>{{currency}}</div>
+    <div>{{value}}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

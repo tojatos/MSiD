@@ -18,7 +18,6 @@ def insert_into_wallet(currency_value_map):
         c.execute(f'INSERT INTO {WALLET_TABLE} (Currency, Value) VALUES (?, ?)', (currency, value))
     conn.commit()
 
-
 def update_in_wallet(currency, value):
     c.execute(f'UPDATE {WALLET_TABLE} SET Value=(?) WHERE Currency=(?)', (value, currency))
     conn.commit()
