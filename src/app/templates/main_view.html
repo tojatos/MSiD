@@ -2,6 +2,7 @@
 
 {% extends "main.html" %}
 {% block content %}
+<div class="container">
 <form class="wallet" action="">
   {{ m.progress_bar('wallet_refresh_bar') }}
   {% for (currency, value) in wallet %}
@@ -12,61 +13,12 @@
   {% endfor %}
   <button class="btn update">Aktualizuj</button>
 </form>
-<svg width="960" height="500"></svg>
+<div class="charts"></div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='node_modules/d3/dist/d3.js')}}"></script>
-
-<script>
-  var n = 40,
-    random = d3.randomNormal(0, .2),
-    data = d3.range(n).map(random);
-
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 20, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var x = d3.scaleLinear()
-    .domain([0, n - 1])
-    .range([0, width]);
-
-var y = d3.scaleLinear()
-    .domain([-1, 1])
-    .range([height, 0]);
-
-var line = d3.line()
-    .x(function(d, i) { return x(i); })
-    .y(function(d, i) { return y(d); });
-
-g.append("defs").append("clipPath")
-    .attr("id", "clip")
-  .append("rect")
-    .attr("width", width)
-    .attr("height", height);
-
-g.append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + y(0) + ")")
-    .call(d3.axisBottom(x));
-
-g.append("g")
-    .attr("class", "axis axis--y")
-    .call(d3.axisLeft(y));
-
-g.append("g")
-    .attr("clip-path", "url(#clip)")
-  .append("path")
-    .datum(data)
-    .attr("class", "line")
-  .transition()
-    .duration(500)
-    .ease(d3.easeLinear);
-    //.on("start", tick);
-
-</script>
 
 <script>
   const update_wallet_btn = document.querySelector('.btn.update');
@@ -74,9 +26,8 @@ g.append("g")
   const update_wallet_url = '/update_wallet';
   const get_wallet_url = '/get_wallet';
   const get_markets_url = '/get_markets';
-  function get_tickers_url(market) {
-    return `/get_tickers/${market}`;
-  }
+  const charts_handle = document.querySelector('.charts');
+  const get_tickers_url = market => `/get_tickers/${market}`;
   const refresh_delay = 5000;
   const wallet_refresh_bar = document.querySelector('.wallet_refresh_bar');
 
@@ -93,12 +44,22 @@ g.append("g")
       });
   }
 
+  function refresh_graphs() {
+    charts_handle.innerHTML = '';
+
+    get_markets().then(markets => {
+        markets.forEach(market => loadData(market).then(data =>
+          create_chart(charts_handle, data, market)));
+    });
+  }
+
   let bar_step = 0;
   function update_bar() {
     if(bar_step < 100) bar_step++;
     else {
       bar_step = 0;
-      refresh_wallet()
+      refresh_wallet();
+      refresh_graphs();
     }
     wallet_refresh_bar.style.width = `${bar_step}%`;
   }
@@ -117,12 +78,18 @@ g.append("g")
     return fetch(get_markets_url).then(response => response.json())
   }
 
-  get_markets().then(markets => {
-    fetch(get_tickers_url(markets[0]))
+  const loadData = market =>
+    fetch(get_tickers_url(market))
       .then(response => response.json())
-      .then(console.log);
-  });
+      .then(data => {
+        return data.map(e => ({
+          buy: e[0],
+          sell: e[1],
+          date: new Date(e[2]),
+        }));
+      });
 
+  refresh_graphs()
   refresh_wallet()
   setInterval(update_bar, refresh_delay/100)
   update_wallet_btn.onclick = update_wallet;
