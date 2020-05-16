@@ -63,29 +63,9 @@ g.append("g")
     .attr("class", "line")
   .transition()
     .duration(500)
-    .ease(d3.easeLinear)
-    .on("start", tick);
+    .ease(d3.easeLinear);
+    //.on("start", tick);
 
-function tick() {
-
-  // Push a new data point onto the back.
-  data.push(random());
-
-  // Redraw the line.
-  d3.select(this)
-      .attr("d", line)
-      .attr("transform", null);
-
-  // Slide it to the left.
-  d3.active(this)
-      .attr("transform", "translate(" + x(-1) + ",0)")
-    .transition()
-      .on("start", tick);
-
-  // Pop the old data point off the front.
-  data.shift();
-
-}
 </script>
 
 <script>
@@ -93,6 +73,10 @@ function tick() {
   const update_wallet_form = document.querySelector('.wallet');
   const update_wallet_url = '/update_wallet';
   const get_wallet_url = '/get_wallet';
+  const get_markets_url = '/get_markets';
+  function get_tickers_url(market) {
+    return `/get_tickers/${market}`;
+  }
   const refresh_delay = 5000;
   const wallet_refresh_bar = document.querySelector('.wallet_refresh_bar');
 
@@ -128,6 +112,16 @@ function tick() {
       body: data,
     });
   }
+
+  function get_markets() {
+    return fetch(get_markets_url).then(response => response.json())
+  }
+
+  get_markets().then(markets => {
+    fetch(get_tickers_url(markets[0]))
+      .then(response => response.json())
+      .then(console.log);
+  });
 
   refresh_wallet()
   setInterval(update_bar, refresh_delay/100)

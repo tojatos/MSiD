@@ -7,8 +7,8 @@ from time import gmtime, strftime
 conn = sqlite3.connect('app/database/database.db', check_same_thread=False)
 c = conn.cursor()
 
-def fetchall(sql):
-    return c.execute(sql).fetchall()
+def fetchall(sql, *args):
+    return c.execute(sql, *args).fetchall()
 
 def get_wallet():
     return fetchall(f'SELECT Currency, Value FROM {WALLET_TABLE}')
@@ -29,3 +29,6 @@ def delete_wallet():
 def insert_market_data(buy, sell, market):
     c.execute(f'INSERT INTO {TICKER_TABLE} (buy, sell, market) VALUES (?, ?, ?)', (buy, sell, market))
     conn.commit()
+
+def get_tickers(market):
+    return fetchall(f'SELECT buy, sell, date FROM {TICKER_TABLE} WHERE market=(?)', (market,))
