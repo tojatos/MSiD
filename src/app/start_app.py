@@ -52,9 +52,9 @@ def wallet_empty():
     return not bool(data.get_wallet())
 
 if __name__ == "__main__":
+    Thread(target=gather_data, daemon=True).start()
 
     if 'DEBUG' not in os.environ:
-        Thread(target=gather_data, daemon=True).start()
         app.run(host=HOST, port=PORT, debug=False)
     else:
         app.run(host=HOST, port=DEBUG_PORT, debug=True)

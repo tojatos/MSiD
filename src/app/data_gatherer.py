@@ -9,7 +9,7 @@ from app.config import MARKETS
 def gather_data_once():
     for market in MARKETS:
         (buy, sell) = get_buy_sell(market)
-        logger.log((buy, sell, market))
+        # logger.log((buy, sell, market))
         data.insert_market_data(buy, sell, market)
 
 def gather_data():
