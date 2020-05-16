@@ -4,7 +4,7 @@ import app.data as data
 import app.logger as logger
 
 from app.bitbay import get_buy_sell
-from app.config import MARKETS
+from app.config import MARKETS, REFRESH_EVERY
 
 def gather_data_once():
     for market in MARKETS:
@@ -15,4 +15,4 @@ def gather_data_once():
 def gather_data():
     while True:
         gather_data_once()
-        sleep(5)
+        sleep(REFRESH_EVERY)

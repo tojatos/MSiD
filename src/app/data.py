@@ -39,3 +39,6 @@ def insert_market_data(buy, sell, market):
 
 def get_tickers(market):
     return fetchall(f'SELECT buy, sell, date FROM {TICKER_TABLE} WHERE market=(?)', (market,))
+
+def get_last_ticker(market):
+    return fetchall(f'SELECT buy, sell, date FROM {TICKER_TABLE} WHERE market=(?) LIMIT 1', (market,))[0]

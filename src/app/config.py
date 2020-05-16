@@ -20,5 +20,10 @@ CURRENCIES = list(INITIAL_WALLET.keys())
 
 TRADING_FEE = 0.0010
 
+REFRESH_EVERY = 5
+
+TRADE_VALUE_TRIGGER = 0.2 # how good a trade has to be to make a transaction
+REFRESH_DATA_EVERY = 50 # how often to refresh data
+
 BITBAY_API_URL = 'https://api.bitbay.net/rest/trading/ticker/'
 

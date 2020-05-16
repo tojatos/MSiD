@@ -1,4 +1,4 @@
 
-def log(msg):
+def log(msg=''):
     print(msg)
 

@@ -8,6 +8,7 @@ import os
 import json
 from flask import Flask, render_template, Response, request, redirect, url_for
 from app.data_gatherer import gather_data
+from app.trader import simulate
 import app.data as data
 from app.config import INITIAL_WALLET, CURRENCIES, MARKETS
 from threading import Thread
@@ -53,6 +54,7 @@ def wallet_empty():
 
 if __name__ == "__main__":
     Thread(target=gather_data, daemon=True).start()
+    Thread(target=simulate, daemon=True).start()
 
     if 'DEBUG' not in os.environ:
         app.run(host=HOST, port=PORT, debug=False)
