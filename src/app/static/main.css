@@ -1,7 +1,41 @@
 html, body {
   height: 100vh;
 }
-body{
+body {
   background: #0e0e0e;
   color: #e1e1e1;
+  font-family: Arial, sans-serif;
+}
+
+.progress_bar {
+  width: 100%;
+  background: #911;
+}
+
+.progress_bar > div {
+  width: 0%;
+  background: #14f;
+  height: 30px;
+  transition-duration: 0.01s;
+}
+
+.wallet {
+  width: 300px;
+  padding: 5px;
+}
+.wallet > .group {
+  width: 100%;
+  display: flex;
+}
+
+.wallet > .group > * {
+  padding: 5px;
+}
+.wallet > .group > div {
+  flex-grow: 1;
+}
+
+.wallet > button {
+  width: 100%;
+  font-size: 1.2em;
 }
