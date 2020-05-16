@@ -9,7 +9,7 @@ import json
 from flask import Flask, render_template, Response, request, redirect, url_for
 from app.data_gatherer import gather_data
 import app.data as data
-from app.config import INITIAL_WALLET, CURRENCIES
+from app.config import INITIAL_WALLET, CURRENCIES, MARKETS
 from threading import Thread
 
 app = Flask(__name__)
@@ -39,6 +39,14 @@ def update_wallet():
 @app.route("/get_wallet")
 def get_wallet():
     return Response(json.dumps(data.get_wallet()), mimetype='application/json')
+
+@app.route("/get_markets")
+def get_markets():
+    return Response(json.dumps(MARKETS), mimetype='application/json')
+
+@app.route("/get_tickers/<market>")
+def get_tickers(market):
+    return Response(json.dumps(data.get_tickers(market)), mimetype='application/json')
 
 def wallet_empty():
     return not bool(data.get_wallet())

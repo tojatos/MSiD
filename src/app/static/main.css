@@ -1,10 +1,15 @@
 html, body {
   height: 100vh;
 }
+
 body {
   background: #0e0e0e;
   color: #e1e1e1;
   font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
 }
 
 .progress_bar {
@@ -38,4 +43,22 @@ body {
 .wallet > button {
   width: 100%;
   font-size: 1.2em;
+}
+
+.line {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.charts {
+  width: 1500px;
+}
+
+.charts > div {
+  background: #0e3040;
+  color: #67809f;
+  width: 600px;
+  margin: 50px;
+  float: left;
 }
