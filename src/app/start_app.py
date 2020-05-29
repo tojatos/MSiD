@@ -1,6 +1,5 @@
 from app import cryptocompare
 from app import plot
-from pprint import pprint
 from datetime import datetime
 
 if __name__ == "__main__":
