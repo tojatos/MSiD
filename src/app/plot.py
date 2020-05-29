@@ -1,11 +1,7 @@
-import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def plot(data):
-    df = pd.DataFrame(data)
-    df['per_ch'] = (df['close'] - df['open']) / df['open'] * 100.0
-
+def plot(df):
     fig = make_subplots(rows=1, cols=2)
     fig.add_trace(
         go.Candlestick(

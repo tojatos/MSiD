@@ -1,11 +1,25 @@
-from app import cryptocompare
-from app import plot
+import pandas as pd
 from datetime import datetime
 
-if __name__ == "__main__":
-    start_time = datetime(2020, 5, 1)
-    end_time = datetime(2020, 5, 21)
-    data = cryptocompare.get_data(datetime.timestamp(start_time), datetime.timestamp(end_time))
+from app import cryptocompare
+from app import plot
+from app.config import START_TIME, END_TIME, SIM_END_TIME
+
+def get_adjusted_data():
+    data = cryptocompare.get_data(
+        datetime.timestamp(START_TIME),
+        datetime.timestamp(END_TIME),
+    )
+
     for d in data:
         d['time'] = datetime.fromtimestamp(d['time'])
-    plot.plot(data)
+
+    df = pd.DataFrame(data)
+    df['per_ch'] = (df['close'] - df['open']) / df['open'] * 100.0
+    return df
+
+
+if __name__ == "__main__":
+    df = get_adjusted_data()
+
+    plot.plot(df)
